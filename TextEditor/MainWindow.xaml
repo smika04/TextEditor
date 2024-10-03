@@ -1,0 +1,487 @@
+﻿<Window x:Class="TextEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Closing="Window_Closing"
+        xmlns:local="clr-namespace:TextEditor"
+        mc:Ignorable="d"
+        Title="Text Editor" Height="450" Width="800">
+    <Window.Resources>
+        <Style x:Key="IconButtonStyle" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Background" Value="{x:Null}"/>
+            <Setter Property="Foreground" Value="{x:Null}"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{x:Null}"/>
+                    <Setter Property="Foreground" Value="{x:Null}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="22"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Menu >
+            <Menu.Resources>
+                <Style TargetType="MenuItem">
+                    <Setter Property="Margin" Value="5"/>
+                </Style>
+            </Menu.Resources>
+            <MenuItem Header="File">
+                <MenuItem Header="New" Click="New_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/icons8-new-file-64.png" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Open" Click="Open_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/icons8-open-file.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save" Click="Save_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/icons8-save-50.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save As..." Click="SaveAs_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/icons8-save-as-64.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Close File" Click="Close_Click"/>
+                <MenuItem Header="Exit" Click="Exit_Click"/>
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Undo" Command="ApplicationCommands.Undo">
+                    <MenuItem.Icon>
+                        <Image Source="/icons8-undo-48.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Redo" Command="ApplicationCommands.Redo">
+                    <MenuItem.Icon>
+                        <Image Source="/icons8-redo-48.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Find" Click="searchButton_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/icons8-view-64.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Format">
+                    <MenuItem Header="Bold" Click="Bold_Click"/>
+                    <MenuItem Header="Italic" Click="Italic_Click"/>
+                    <MenuItem Header="Underline" Click="Underline_Click"/>
+                </MenuItem>
+                <MenuItem Header="Lists">
+                    <MenuItem Header="Bullet List" Click="markerBullet_Click">
+                        <MenuItem.Icon>
+                            <Image Source="/icons8-bullet-64.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Numbered List" Click="markerButton_Click">
+                        <MenuItem.Icon>
+                            <Image Source="/icons8-numeric-50.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="Insert">
+                    <MenuItem Header="Image" Click="insertPicButton_Click">
+                        <MenuItem.Icon>
+                            <Image Source="/icons8-image-64.png" Stretch="UniformToFill"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+            </MenuItem>
+
+        </Menu>
+            <ToolBar Grid.Row="0" VerticalAlignment="Top">
+                <Button x:Name="undoButton" Command="ApplicationCommands.Undo" Margin="1,1,1,0"  VerticalAlignment="Center" Width="20" Height="20" Style="{StaticResource IconButtonStyle}">
+                    <ContentControl>
+                        <ContentControl.Style>
+                            <Style TargetType="ContentControl">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=undoButton, Path=IsEnabled}" Value="True">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <Image Source="/icons8-undo-48.png" Stretch="Fill"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=undoButton, Path=IsEnabled}" Value="False">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <Image Source="/icons8-undo-25.png" Stretch="Fill"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
+                    <Button.ToolTip>
+                        <ToolTip Content="Undo" />
+                    </Button.ToolTip>
+                </Button>
+                <!-- Аналогічно для кнопки Redo -->
+                <Button x:Name="redoButton" Command="ApplicationCommands.Redo" Margin="1,1,1,0"  VerticalAlignment="Center" Width="20" Height="20" Style="{StaticResource IconButtonStyle}">
+                    <ContentControl>
+                        <ContentControl.Style>
+                            <Style TargetType="ContentControl">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=redoButton, Path=IsEnabled}" Value="True">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <Image Source="/icons8-redo-48.png" Stretch="Fill"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=redoButton, Path=IsEnabled}" Value="False">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <Image Source="/icons8-redo-25.png" Stretch="Fill"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
+                    <Button.ToolTip>
+                        <ToolTip Content="Redo" />
+                    </Button.ToolTip>
+                </Button>
+            </ToolBar>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Grid x:Name="newSave" Width="26" RenderTransformOrigin="0.5,0.5" Height="50">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Button x:Name="newButton" Margin="1,1,1,0"  VerticalAlignment="Center" Width="20" Height="20" Click="New_Click" Style="{StaticResource IconButtonStyle}">
+                    <ContentControl>
+                        <ContentControl.Content>
+                            <Image Source="/icons8-new-file-64.png" Stretch="Fill"/>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <Button.ToolTip>
+                        <ToolTip Content="New file" />
+                    </Button.ToolTip>
+                </Button>
+                <Button x:Name="saveButton" Grid.Row="2" Margin="1,1,1,2" VerticalAlignment="Top" Width="20" Height="20" Click="saveButton_Click" Style="{StaticResource IconButtonStyle}">
+                    <ContentControl>
+                        <ContentControl.Content>
+                            <Image Source="/icons8-save-50.png"/>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <Button.ToolTip>
+                        <ToolTip Content="Save file" />
+                    </Button.ToolTip>
+                </Button>
+
+            </Grid>
+            <Grid x:Name="openSave" Width="26" RenderTransformOrigin="0.5,0.5" Height="50">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Button x:Name="openButton" Margin="1,1,1,0"  VerticalAlignment="Center" Width="20" Height="20" Click="Open_Click" Style="{StaticResource IconButtonStyle}">
+                    <ContentControl>
+                        <ContentControl.Content>
+                            <Image Source="/icons8-open-file.png" Stretch="Fill"/>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <Button.ToolTip>
+                        <ToolTip Content="Open file" />
+                    </Button.ToolTip>
+                </Button>
+                <Button x:Name="saveAsButton" Grid.Row="2" Margin="1,1,1,2" VerticalAlignment="Top" Width="20" Height="20" Click="SaveAs_Click" Style="{StaticResource IconButtonStyle}">
+                    <ContentControl>
+                        <ContentControl.Content>
+                            <Image Source="/icons8-save-as-64.png"/>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <Button.ToolTip>
+                        <ToolTip Content="Save file as..." />
+                    </Button.ToolTip>
+                </Button>
+
+            </Grid>
+            <Border Width="1" Background="DarkGray" Margin="0,0"/>
+            <Grid x:Name="Font" RenderTransformOrigin="2.5,0.5" UseLayoutRounding="False" Height="50">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Content="Font" Height="17" FontSize="10" Margin="2,1,2,2" Padding="2,2,5,2"/>
+
+                <ComboBox x:Name="FontComboBox" Grid.Row="1" Margin="2,0,44,3" VerticalAlignment="Bottom" Height="17" Padding="2,1,2,1" ScrollViewer.CanContentScroll="True" SelectionChanged="FontComboBox_SelectionChanged" FontSize="10">
+                </ComboBox>
+
+                <ComboBox x:Name="FontSizeComboBox" Grid.Row="1" Margin="112,0,2,3" IsEditable="True" Width="40" VerticalAlignment="Bottom" Height="17" Padding="2,0,4,2" SelectionChanged="FontSizeComboBox_SelectionChanged" FontSize="10">
+                </ComboBox>
+            </Grid>
+            <Border Width="1" Background="DarkGray" Margin="0,0"/>
+            <Grid x:Name="fontColor" Width="54" RenderTransformOrigin="2.5,0.5" Height="50">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Content="Font color" Height="17" FontSize="10" Margin="2,1,2,0" Padding="2,2,2,0" VerticalAlignment="Top"/>
+
+                <ComboBox x:Name="ColorComboBox" Grid.Row="1" Margin="2,12,2,0" VerticalAlignment="Top" Height="17" Padding="6,0,5,0" SelectionChanged="ColorComboBox_SelectionChanged" FontSize="10">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="24" Height="13" Margin="0,2,5,2">
+                                    <Rectangle.Fill>
+                                        <SolidColorBrush Color="{Binding}" />
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+            </Grid>
+            <Border Width="1" Background="DarkGray" Margin="0,0"/>
+            <Grid x:Name="backgroundColor" Width="85" RenderTransformOrigin="0.5,0.5" Height="50">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Content="Background color" Height="17" FontSize="10" Margin="0,1,2,2" Padding="2,2,2,2" VerticalAlignment="Top"/>
+
+                <ComboBox x:Name="BackgroundColorComboBox" Grid.Row="1" Margin="2,10,2,0" VerticalAlignment="Top" Height="17" Padding="6,0,5,0" SelectionChanged="BackgroundColorComboBox_SelectionChanged" FontSize="10">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="24" Height="13" Margin="0,2,5,2">
+                                    <Rectangle.Fill>
+                                        <SolidColorBrush Color="{Binding}" />
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+            </Grid>
+            <Border Width="1" Background="DarkGray" Margin="0,0"/>
+            <Grid x:Name="fontSizeUpDown" Width="26" RenderTransformOrigin="0.5,0.5" Height="50">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Button x:Name="sizeUp" Margin="2,1,1,0" VerticalAlignment="Center" Width="22" Height="22" Click="sizeUp_Click">
+                    <TextBlock Text="A^" TextDecorations="None" FontSize="9"/>
+                </Button>
+                <Button x:Name="sizeDown" Grid.Row="1" Margin="2,0,1,0" VerticalAlignment="Top" Width="22" Height="22" Click="sizeDown_Click">
+                    <TextBlock Text="a^" TextDecorations="None" FontSize="9"/>
+                </Button>
+
+            </Grid>
+            <Border Width="1" Background="DarkGray" Margin="0,0"/>
+            <Button x:Name="boldButton" Margin="2,2,1,2" VerticalAlignment="Top" Width="30" Height="45" Click="Bold_Click" FontWeight="Bold">
+                <TextBlock Text="B" TextDecorations="None"/>
+            </Button>
+            <Button x:Name="italicButton" Margin="1,2,1,1" VerticalAlignment="Top" Width="30" Height="45" Click="Italic_Click" FontStyle="Oblique">
+                <TextBlock Text="I" TextDecorations="None"/>
+            </Button>
+            <Button x:Name="underlineButton" Margin="1,2,2,1" VerticalAlignment="Top" Width="30" Height="45" Click="Underline_Click" FontFamily="Arial">
+                <TextBlock Text="U" TextDecorations="Underline"/>
+            </Button>
+            <Border Width="1" Background="DarkGray" Margin="0,0"/>
+            <Grid x:Name="UpperLowerText" Width="26" RenderTransformOrigin="0.5,0.5" Height="50">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Button x:Name="caseButton" Margin="1,1,1,0"  VerticalAlignment="Center" Width="20" Height="20" Click="ChangeCase_Click" Style="{StaticResource IconButtonStyle}">
+                    <ContentControl>
+                        <ContentControl.Content>
+                            <Image Source="/icons8-font-size-50.png" Stretch="Fill"/>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <Button.ToolTip>
+                        <ToolTip Content="Upper/Lower" />
+                    </Button.ToolTip>
+                </Button>
+                <!--<Button x:Name="maButton" Grid.Row="1" Margin="1,1,1,2" VerticalAlignment="Top" Width="20" Height="20" Click="markerButton_Click" Style="{StaticResource IconButtonStyle}">
+                    <ContentControl>
+                        <ContentControl.Content>
+                            <Image Source="/icons8-numeric-50.png"/>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <Button.ToolTip>
+                        <ToolTip Content="Num list" />
+                    </Button.ToolTip>
+                </Button>-->
+
+            </Grid>
+            <Grid x:Name="searchText" Width="26" RenderTransformOrigin="0.5,0.5" Height="50">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Button x:Name="searchButton" Margin="1,1,1,0" VerticalAlignment="Center" Width="20" Height="20" Click="searchButton_Click"  Style="{StaticResource IconButtonStyle}">
+                    <ContentControl>
+                        <ContentControl.Content>
+                            <Image Source="/icons8-view-64.png"/>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <Button.ToolTip>
+                        <ToolTip Content="Search text" />
+                    </Button.ToolTip>
+                </Button>
+                <Button x:Name="markerButton" Grid.Row="1" Margin="1,1,1,2" VerticalAlignment="Top" Width="20" Height="20" Click="markerButton_Click" Style="{StaticResource IconButtonStyle}">
+                    <ContentControl>
+                        <ContentControl.Content>
+                            <Image Source="/icons8-numeric-50.png"/>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <Button.ToolTip>
+                        <ToolTip Content="Num list" />
+                    </Button.ToolTip>
+                </Button>
+
+            </Grid>
+            <Grid x:Name="insert" Width="26" RenderTransformOrigin="0.5,0.5" Height="50">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Button x:Name="insertPicButton" Margin="1,1,1,0"  VerticalAlignment="Center" Width="20" Height="20" Click="insertPicButton_Click" Style="{StaticResource IconButtonStyle}">
+                    <ContentControl>
+                        <ContentControl.Content>
+                            <Image Source="/icons8-image-64.png" Stretch="Fill"/>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <Button.ToolTip>
+                        <ToolTip Content="Insert picture from file" />
+                    </Button.ToolTip>
+                </Button>
+                <Button x:Name="bulletButton" Grid.Row="2" Margin="1,1,1,2" VerticalAlignment="Top" Width="20" Height="20" Click="markerBullet_Click" Style="{StaticResource IconButtonStyle}">
+                    <ContentControl>
+                        <ContentControl.Content>
+                            <Image Source="/icons8-bullet-64.png"/>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <Button.ToolTip>
+                        <ToolTip Content="Bullet list" />
+                    </Button.ToolTip>
+                </Button>
+
+            </Grid>
+            <Border Width="1" Background="DarkGray" Margin="0,0"/>
+            <Button x:Name="alignLeft" Margin="2,2,1,2" VerticalAlignment="Top" Width="30" Height="45" Click="alignLeft_Click" FontWeight="Bold" Style="{StaticResource IconButtonStyle}">
+                <ContentControl>
+                    <ContentControl.Content>
+                        <Image Source="/icons8-align-left-50.png" Stretch="Uniform"/>
+                    </ContentControl.Content>
+                </ContentControl>
+            </Button>
+            <Button x:Name="alignCentr" Margin="1,2,1,1" VerticalAlignment="Top" Width="30" Height="45" Click="alignCentr_Click" FontStyle="Oblique" Style="{StaticResource IconButtonStyle}">
+                <ContentControl>
+                    <ContentControl.Content>
+                        <Image Source="/icons8-align-center-50.png" Stretch="Uniform"/>
+                    </ContentControl.Content>
+                </ContentControl>
+            </Button>
+            <Button x:Name="alignRight" Margin="1,2,2,1" VerticalAlignment="Top" Width="30" Height="45" Click="alignRight_Click" FontFamily="Arial" Style="{StaticResource IconButtonStyle}">
+                <ContentControl>
+                    <ContentControl.Content>
+                        <Image Source="/icons8-align-right-50.png" Stretch="Uniform"/>
+                    </ContentControl.Content>
+                </ContentControl>
+            </Button>
+            <Button x:Name="alignJunify" Margin="1,2,2,1" VerticalAlignment="Top" Width="30" Height="45" Click="alignJustify_Click" FontFamily="Arial" Style="{StaticResource IconButtonStyle}">
+                <ContentControl>
+                    <ContentControl.Content>
+                        <Image Source="/icons8-align-justify-50.png" Stretch="Uniform"/>
+                    </ContentControl.Content>
+                </ContentControl>
+            </Button>
+            <Border Width="1" Background="DarkGray" Margin="0,0"/>
+            <Button x:Name="helpButton" Margin="1,2,2,1" VerticalAlignment="Top" Width="30" Height="45" Click="helpButton_Click" FontFamily="Arial" Style="{StaticResource IconButtonStyle}">
+                <ContentControl>
+                    <ContentControl.Content>
+                        <Image Source="/icons8-help-64.png" Stretch="Uniform"/>
+                    </ContentControl.Content>
+                </ContentControl>
+                <Button.ToolTip>
+                    <ToolTip Content="Help" />
+                </Button.ToolTip>
+            </Button>
+            <Border Width="1" Background="DarkGray" Margin="0,0"/>
+
+        </StackPanel>
+        <Border Height="1" Grid.Row="1" Background="DarkGray" Margin="0,0" VerticalAlignment="Top" />
+        <Border Height="1" Grid.Row="1" Background="DarkGray" Margin="0,0" VerticalAlignment="Bottom" />
+        <Border Height="1" Grid.Row="3" Background="DarkGray" Margin="0,0" VerticalAlignment="Top" />
+
+        <Grid x:Name="ContentGrid" Grid.Row="2" Background="LightGray">
+            <ScrollViewer>
+                <RichTextBox x:Name="richTextBox" Margin="5" Padding="40,25,25,30" VerticalScrollBarVisibility="Auto" Height="842" Width="595">
+                    <FlowDocument>
+                        <Section>
+                            <BlockUIContainer>
+                                <BlockUIContainer.Margin>
+                                    <Thickness Left="20" Right="20"/>
+                                </BlockUIContainer.Margin>
+                                <StackPanel>
+                                    <TextBlock Text="Page 1" FontSize="16" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </BlockUIContainer>
+                        </Section>
+                    </FlowDocument>
+                </RichTextBox>
+            </ScrollViewer>
+        </Grid>
+
+        <StackPanel x:Name="statucBar" Grid.Row="3" Orientation="Horizontal"  VerticalAlignment="Bottom">
+            <Button x:Name="rotateButton" Margin="5,2,1,2" VerticalAlignment="Top" Width="18" Height="18" BorderBrush="White" Style="{StaticResource IconButtonStyle}" Click="rotateButton_Click">
+                <ContentControl>
+                    <ContentControl.Content>
+                        <Image Source="/icons8-auto-rotate-based-on-text-64.png"/>
+                    </ContentControl.Content>
+                </ContentControl>
+                <Button.ToolTip>
+                    <ToolTip Content="Portret/Landscape" />
+                </Button.ToolTip>
+            </Button>
+            <Button x:Name="zoomOutButton" Margin="1,2,1,2" VerticalAlignment="Top" Width="18" Height="18" BorderBrush="White" Style="{StaticResource IconButtonStyle}" Click="zoomOutButton_Click">
+                <ContentControl>
+                    <ContentControl.Content>
+                        <Image Source="/icons8-zoom-out-60.png"/>
+                    </ContentControl.Content>
+                </ContentControl>
+                <Button.ToolTip>
+                    <ToolTip Content="Scale -" />
+                </Button.ToolTip>
+            </Button>
+            <Slider x:Name="scaleSlider" HorizontalAlignment="Left" Margin="1,2,1,2" Grid.Row="3" VerticalAlignment="Top" Width="120" Maximum="2" SmallChange="0.01" Value="{Binding scale, Mode=TwoWay}" Background="{x:Null}" Cursor="Hand" TickPlacement="BottomRight"/>
+            <Button x:Name="zoomInButton" Margin="5,2,1,2" VerticalAlignment="Top" Width="18" Height="18" BorderBrush="White" Style="{StaticResource IconButtonStyle}" Click="zoomInButton_Click">
+                <ContentControl>
+                    <ContentControl.Content>
+                        <Image Source="/icons8-zoom-in-60.png" Width="18" Height="18"/>
+                    </ContentControl.Content>
+                </ContentControl>
+                <Button.ToolTip>
+                    <ToolTip Content="Scale +" />
+                </Button.ToolTip>
+            </Button>
+            <TextBlock x:Name="scaleValueLabel" VerticalAlignment="Top" Margin="0,2,0,2" Height="18" Width="32" />
+        </StackPanel>
+    </Grid>
+
+</Window>

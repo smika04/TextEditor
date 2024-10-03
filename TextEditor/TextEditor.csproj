@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="icons8-align-center-50.png" />
+    <None Remove="icons8-align-justify-50.png" />
+    <None Remove="icons8-align-Justify-64.png" />
+    <None Remove="icons8-align-left-50.png" />
+    <None Remove="icons8-align-right-50.png" />
+    <None Remove="icons8-align-text-center-64.png" />
+    <None Remove="icons8-align-text-left-50.png" />
+    <None Remove="icons8-align-text-right-50.png" />
+    <None Remove="icons8-auto-rotate-based-on-text-64.png" />
+    <None Remove="icons8-bullet-64.png" />
+    <None Remove="icons8-font-size-50.png" />
+    <None Remove="icons8-help-64.png" />
+    <None Remove="icons8-image-64.png" />
+    <None Remove="icons8-loupe-32.png" />
+    <None Remove="icons8-new-file-64.png" />
+    <None Remove="icons8-numeric-50.png" />
+    <None Remove="icons8-open-file.png" />
+    <None Remove="icons8-redo-25.png" />
+    <None Remove="icons8-redo-48.png" />
+    <None Remove="icons8-save-50.png" />
+    <None Remove="icons8-save-as-64.png" />
+    <None Remove="icons8-settings-50.png" />
+    <None Remove="icons8-share-50.png" />
+    <None Remove="icons8-undo-25.png" />
+    <None Remove="icons8-undo-48.png" />
+    <None Remove="icons8-view-64.png" />
+    <None Remove="icons8-zoom-in-60.png" />
+    <None Remove="icons8-zoom-out-60.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="icons8-align-center-50.png" />
+    <Resource Include="icons8-align-justify-50.png" />
+    <Resource Include="icons8-align-Justify-64.png" />
+    <Resource Include="icons8-align-left-50.png" />
+    <Resource Include="icons8-align-right-50.png" />
+    <Resource Include="icons8-align-text-center-64.png" />
+    <Resource Include="icons8-align-text-left-50.png" />
+    <Resource Include="icons8-align-text-right-50.png" />
+    <Resource Include="icons8-auto-rotate-based-on-text-64.png" />
+    <Resource Include="icons8-bullet-64.png" />
+    <Resource Include="icons8-font-size-50.png" />
+    <Resource Include="icons8-help-64.png" />
+    <Resource Include="icons8-image-64.png" />
+    <Resource Include="icons8-loupe-32.png" />
+    <Resource Include="icons8-new-file-64.png" />
+    <Resource Include="icons8-numeric-50.png" />
+    <Resource Include="icons8-open-file.png" />
+    <Resource Include="icons8-redo-25.png" />
+    <Resource Include="icons8-redo-48.png" />
+    <Resource Include="icons8-save-50.png" />
+    <Resource Include="icons8-save-as-64.png" />
+    <Resource Include="icons8-settings-50.png" />
+    <Resource Include="icons8-share-50.png" />
+    <Resource Include="icons8-undo-25.png" />
+    <Resource Include="icons8-undo-48.png" />
+    <Resource Include="icons8-view-64.png" />
+    <Resource Include="icons8-zoom-in-60.png" />
+    <Resource Include="icons8-zoom-out-60.png" />
+  </ItemGroup>
+
+</Project>
