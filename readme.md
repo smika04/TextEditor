@@ -61,18 +61,6 @@ Although the codebase reflects early-stage development skills, the project demon
 
 ---
 
-## 📌 Future Improvements (Planned or Recommended)
-
-- Refactor into clean, modular architecture (MVC or MVVM)  
-- Remove hardcoded values and replace with configuration-driven setup  
-- Enhance file format support (e.g., full `.rtf` or `.docx` compatibility)  
-- Add export options for PDF and print layouts  
-- Improve image handling with resizing and positioning tools  
-- Implement autosave and recovery features  
-- Optimize for performance with larger documents  
-
----
-
 **Despite technical imperfections, this project provided essential hands-on experience in building real-world GUI tools and laid the groundwork for future, more polished software development efforts.**
 
 ---
